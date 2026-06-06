@@ -48,59 +48,33 @@ class WCspider(scrapy.Spider):
     def parse(self, response):
 
         self.driver.get(response.url)
-
-
-# Ensure JavaScript-loaded content is fully visible by scrolling
-
         self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
-
-        time.sleep(7) # Allow time for content to load
-
-
-# Parse page source with BeautifulSoup
+        time.sleep(5) # Allow time for content to load
 
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
 
-
-# Extract product details
-
         for team in soup.find_all("tr", class_="standings-table-row_tableRow__IZhv4"):
 
-            team_page_link = "fifa.com" +  team.find("a", class_="table-team-name_teamLink__qDRZ4").get('href')
-#"fifa.com" +
-            # yield team_page_link
-            # rand_text = response.css("div.standings-table-head_text__NDynK::text")
-            yield Request(url = team_page_link, callback = self.parse_team)
-            # yield rand_text
-
-
-            ###### Need to properly understand how response and request objects work in scrapy + how to use them to move between diff functions using callbacks
-
+            team_page_link = "https://www.fifa.com" +  team.find("a", class_="table-team-name_teamLink__qDRZ4").get('href')
+            #self.driver.quit()
+            # self.driver.get(team_page_link)
+            # self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
+            # team_soup = BeautifulSoup(self.driver.page_source, "html.parser")
             #
-            # yield {
-            #
-            #     "team_name": team.find("span", class_ = "d-none d-md-1024-block").get_text(),
-            #     "group_rank": team.find("td", class_= "standings-table-row_index__lfMgF d-xs-table-cell d-md-table-cell").get_text(),
-            #
-            #     }
+            # articles = "https://www.fifa.com" + team_soup.find("a", class_ = "ff-mb-0 carousel-header_seeAll__Aif3S").get('href')
+
+            yield Request(url = team_page_link, callback = self.parse_teampage, dont_filter=True, headers = {
+                "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"})
 
 
+        # self.driver.quit() # Close browser session
 
 
-        self.driver.quit() # Close browser session
-        # yield {'response': response}
-
-    def parse_team(self, response):
-        print("--------------------------------------")
+    def parse_teampage(self, response):
         self.driver.get(response.url)
-
-        # Ensure JavaScript-loaded content is fully visible by scrolling
-
         self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
 
-        time.sleep(7)  # Allow time for content to load
-
-        # Parse page source with BeautifulSoup
+        time.sleep(3)  # Allow time for content to load
 
         soup1 = BeautifulSoup(self.driver.page_source, "html.parser")
 
@@ -109,8 +83,29 @@ class WCspider(scrapy.Spider):
         #3: open "see more" link, then check the articles there
         #4: filler vals if still not found
 
+        names1 = soup1.find_all("div", class_ = "player-badge-card_playerName__NHS1e")
+        positions = soup1.find_all("div", class_ = "player-badge-card_playerPosition__+uSwv")
+
+        name_list = []
+        pos_list = []
+
+        for x,y in zip(names1, positions):
+            name = x.find("span", class_ = "d-md-none").get_text()
+            pos = y.find("span", class_="d-md-none").get_text()
+
+            yield {
+                "name" : name,
+                "position" : pos
+            }
+        # for names in names1:
+        #     name = names.find("span", class_ = "d-md-none").get_text()
+        # for position in positions:
+        #     pos = position.find("span", class_ = "d-md-none").get_text()
 
 
-        # WcItem['squad_link'] = soup1.find('')
 
-        yield WcItem
+        # print(name_list)
+        # print(pos_list)
+            # WcItem['squad_link'] = soup1.find('')
+
+            #yield WcItem
