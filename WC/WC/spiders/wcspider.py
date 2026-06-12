@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup
 
 from WC.items import WcItem
 
+from itemadapter import ItemAdapter
+
 
 class WCspider(scrapy.Spider):
     name = "wcspider"
@@ -86,26 +88,17 @@ class WCspider(scrapy.Spider):
         names1 = soup1.find_all("div", class_ = "player-badge-card_playerName__NHS1e")
         positions = soup1.find_all("div", class_ = "player-badge-card_playerPosition__+uSwv")
 
-        name_list = []
-        pos_list = []
 
         for x,y in zip(names1, positions):
             name = x.find("span", class_ = "d-md-none").get_text()
             pos = y.find("span", class_="d-md-none").get_text()
 
-            yield {
-                "name" : name,
-                "position" : pos
-            }
-        # for names in names1:
-        #     name = names.find("span", class_ = "d-md-none").get_text()
-        # for position in positions:
-        #     pos = position.find("span", class_ = "d-md-none").get_text()
+            wcitem = scrapy.Item()
+            wcitem['name'] = name
+            wcitem['position'] = pos
 
+            yield wcitem    #test if there's a diff using return instead
 
+            #test run to: 1) see if items are collected by spider, 2) if items are adjusted in pipeline
+            
 
-        # print(name_list)
-        # print(pos_list)
-            # WcItem['squad_link'] = soup1.find('')
-
-            #yield WcItem
