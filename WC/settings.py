@@ -61,8 +61,8 @@ COOKIES_ENABLED = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   #"WC.pipelines.WcPipeline": 300,
-   #"WC.pipelines.ImportToMySQLPipeline": 350
+   # "WC.pipelines.WcPipeline": 300,
+   "WC.pipelines.ImportToMySQLPipeline": 350
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

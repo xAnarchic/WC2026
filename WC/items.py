@@ -6,9 +6,9 @@
 import scrapy
 
 
-class WcItem(scrapy.Item):
+class Wcteam(scrapy.Item):
     name = scrapy.Field()
-    group = scrapy.Field()
+    group_name = scrapy.Field()
     pos = scrapy.Field()
     played = scrapy.Field()
     wins = scrapy.Field()
@@ -17,9 +17,11 @@ class WcItem(scrapy.Item):
     goals_scored = scrapy.Field()
     goals_allowed = scrapy.Field()
     pts = scrapy.Field()
+    pass
+
+class Wcplayer(scrapy.Item):
     player = scrapy.Field()
     player_position = scrapy.Field()
     country = scrapy.Field()
-    goals = scrapy.Field()
-    assists = scrapy.Field()
-    pass
+    # goals = scrapy.Field()
+    # assists = scrapy.Field()
