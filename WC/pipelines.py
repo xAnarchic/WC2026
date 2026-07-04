@@ -20,7 +20,7 @@ class ImportToMySQLPipeline:
     def __init__(self):
 
         try:
-            self.connection = connector.Connect(
+            self.connection = connector.connect(
                 host = 'localhost',
                 user = 'root',  #Replace this so user has to enter username
                 password = 'root',      #Replace this so user has to enter pass
@@ -30,50 +30,53 @@ class ImportToMySQLPipeline:
         except connector.Error as err:
             if err.errno == connector.errorcode.ER_ACCESS_DENIED_ERROR:
                 print('Cannot sign in')
+            elif err is None:
+                print("Successful connection")
             else:
-                print({err})
+                print({err}, "----")
 
-        #Creating attribute with cursor for later use
-        self.cursor = self.connection.cursor()
 
     #Creating tables within database
-    # def table_creation(self):
-    #
-    #     teams_table = """CREATE TABLE IF NOT EXISTS teams1(
-    #                                 id INT NOT NULL auto_increment,
-    #                                 country VARCHAR(255),
-    #                                 group_name VARCHAR(255),
-    #                                 group_pos INT,
-    #                                 games_played INT,
-    #                                 wins INT,
-    #                                 draws INT,
-    #                                 losses INT,
-    #                                 goals_scored INT,
-    #                                 goals_conceded INT,
-    #                                 points INT,
-    #                                 primary key (id)
-    #                                     )"""
-    #
-    #     players_table = """CREATE TABLE IF NOT EXISTS players1(
-    #                                     name VARCHAR(255),
-    #                                     position VARCHAR(255),
-    #                                     country VARCHAR(255)
-    #                                         )"""
-    #
-    #     player_stats = """
-    #
-    #
-    #
-    #                                 """
-    #
-    #     self.cursor.execute(teams_table)
-    #     self.cursor.execute(players_table)
+    def table_creation(self):
+
+        teams_table = """CREATE TABLE IF NOT EXISTS teams1(
+                                    id INT NOT NULL auto_increment,
+                                    country VARCHAR(255),
+                                    group_name VARCHAR(255),
+                                    group_pos INT,
+                                    games_played INT,
+                                    wins INT,
+                                    draws INT,
+                                    losses INT,
+                                    goals_scored INT,
+                                    goals_conceded INT,
+                                    points INT,
+                                    primary key (id)
+                                        )"""
+
+        players_table = """CREATE TABLE IF NOT EXISTS players1(
+                                        name VARCHAR(255),
+                                        position VARCHAR(255),
+                                        country VARCHAR(255)
+                                            )"""
+
+        player_stats = """
+
+
+
+                                    """
+
+        self.connection.cursor().execute(teams_table)
+        self.connection.cursor().execute(players_table)
 
 
     #Handling items separately
 
     def process_item(self,item):
-        print("----------------------------")
+
+        self.table_creation()
+        # print("----------------------------")
+        # print(item, "+++", type(item))
         #Currently makes tables but need to get the item handling to work
         teams_table = """CREATE TABLE IF NOT EXISTS teams1(
                                             id INT NOT NULL auto_increment,
@@ -101,14 +104,16 @@ class ImportToMySQLPipeline:
 
 
                                             """
-
-        self.cursor.execute(teams_table)
-        self.cursor.execute(players_table)
-        # yield self.table_creation()
+        # print(self.cursor, "----")
+        # self.connection.execute(teams_table)
+        # self.connection.execute(players_table)
+        # # yield self.table_creation()
         # if type(item) == type(Wcteam):
-        #     return self.process_wcteam(wcteam = item)
+        #     print("+++++++++++++++++")
+        #     # return self.process_wcteam(wcteam = item)
         # elif type(item) == type(Wcplayer):
-        #     yield cls.process_wcplayer(wcplayer = item)
+        #     print("////////////////")
+        #     # yield cls.process_wcplayer(wcplayer = item)
 
     #Handling wcteam items
     # def process_wcteam(self, wcteam):
@@ -166,7 +171,7 @@ class ImportToMySQLPipeline:
     #         pass
     #
     #     self.connection.commit()
-
+        return
 
     def close_spider(self, spider):
         self.cursor.close()

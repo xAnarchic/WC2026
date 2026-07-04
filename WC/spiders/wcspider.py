@@ -62,7 +62,7 @@ class WCspider(scrapy.Spider):
                 wcteam["goals_scored"] = team_goal_stats[0].string
                 wcteam["goals_allowed"] = team_goal_stats[1].string
                 wcteam["pts"] = team.find("td", class_="standings-table-row_stats__8X9fU standings-table-row_points__A+pD8 d-xs-table-cell d-md-table-cell d-md-1024-table-cell").string
-                yield wcteam
+                yield wcteam, print("hi")
 
 
                 team_page_link = "https://www.fifa.com" +  team.find("a", class_="table-team-name_teamLink__qDRZ4").get('href')
@@ -102,6 +102,6 @@ class WCspider(scrapy.Spider):
             wcplayer["player"] = name
             wcplayer["player_position"] = pos
             wcplayer["country"] = country
-            yield wcplayer
+            yield wcplayer, print("hi")
 
 
