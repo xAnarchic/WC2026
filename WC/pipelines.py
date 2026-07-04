@@ -75,104 +75,85 @@ class ImportToMySQLPipeline:
     def process_item(self,item):
 
         self.table_creation()
-        # print("----------------------------")
-        # print(item, "+++", type(item))
-        #Currently makes tables but need to get the item handling to work
-        teams_table = """CREATE TABLE IF NOT EXISTS teams1(
-                                            id INT NOT NULL auto_increment,
-                                            country VARCHAR(255),
-                                            group_name VARCHAR(255),
-                                            group_pos INT,
-                                            games_played INT,
-                                            wins INT,
-                                            draws INT,
-                                            losses INT,
-                                            goals_scored INT,
-                                            goals_conceded INT,
-                                            points INT,
-                                            primary key (id)
-                                                )"""
 
-        players_table = """CREATE TABLE IF NOT EXISTS players1(
-                                                name VARCHAR(255),
-                                                position VARCHAR(255),
-                                                country VARCHAR(255)
-                                                    )"""
+        # print("----------------------------")
+        # print(item, "+++", type(item), type(wcteam1), type(wcplayer1))
+        #Currently makes tables but need to get the item handling to work
 
         player_stats = """
 
 
 
                                             """
-        # print(self.cursor, "----")
-        # self.connection.execute(teams_table)
-        # self.connection.execute(players_table)
-        # # yield self.table_creation()
-        # if type(item) == type(Wcteam):
-        #     print("+++++++++++++++++")
-        #     # return self.process_wcteam(wcteam = item)
-        # elif type(item) == type(Wcplayer):
-        #     print("////////////////")
-        #     # yield cls.process_wcplayer(wcplayer = item)
+        wcteam = Wcteam()
+        wcplayer = Wcplayer()
+
+        #Problem with getting items to their respective methods
+        if type(item) == type(wcteam):
+            print(item, "+++++++++++++++++")
+            # return self.process_wcteam(wcteam = item)
+        elif type(item) == type(wcplayer):
+            print(item, "////////////////")
+            # yield self.process_wcplayer(wcplayer = item)
 
     #Handling wcteam items
-    # def process_wcteam(self, wcteam):
-    #
-    #     add_teams = ("INSERT INTO teams1"
-    #                 "(country, group_name, group_pos, games_played, wins, draws, losses, goals_scored, goals_conceded, points)"
-    #                 "VALUES (%(country)s, %(group_name)s, %(group_pos)s, "
-    #                  "%(games_played)s, %(wins)s, %(draws)s, %(losses)s, "
-    #                  "%(goals_scored)s, %(goals_conceded)s, %(points)s)")
-    #
-    #     team_dict = dict(wcteam)
-    #     team_data = {
-    #         "country" : team_dict["name"],
-    #         "group_name" : team_dict["group_name"],
-    #         "group_pos": team_dict["pos"],
-    #         "games_played": team_dict["played"],
-    #         "wins": team_dict["wins"],
-    #         "draws": team_dict["draws"],
-    #         "losses": team_dict["losses"],
-    #         "goals_scored": team_dict["goals_scored"],
-    #         "goals_conceded": team_dict["goals_allowed"],
-    #         "points": team_dict["pts"]
-    #                                             }
-    #
-    #     try:
-    #         self.cursor.execute(add_teams, team_data)
-    #
-    #     except _mysql_connector.MySQLError as error:
-    #         print(f"Error importing data: {error}")
-    #         pass
-    #
-    #     self.connection.commit()
-    #
+    def process_wcteam(self, wcteam):
+
+        add_teams = ("INSERT INTO teams1"
+                    "(country, group_name, group_pos, games_played, wins, draws, losses, goals_scored, goals_conceded, points)"
+                    "VALUES (%(country)s, %(group_name)s, %(group_pos)s, "
+                     "%(games_played)s, %(wins)s, %(draws)s, %(losses)s, "
+                     "%(goals_scored)s, %(goals_conceded)s, %(points)s)")
+
+        team_dict = dict(wcteam)
+        team_data = {
+            "country" : team_dict["name"],
+            "group_name" : team_dict["group_name"],
+            "group_pos": team_dict["pos"],
+            "games_played": team_dict["played"],
+            "wins": team_dict["wins"],
+            "draws": team_dict["draws"],
+            "losses": team_dict["losses"],
+            "goals_scored": team_dict["goals_scored"],
+            "goals_conceded": team_dict["goals_allowed"],
+            "points": team_dict["pts"]
+                                                }
+
+        try:
+            self.cursor.execute(add_teams, team_data)
+
+        except _mysql_connector.MySQLError as error:
+            print(f"Error importing data: {error}")
+            pass
+
+        self.connection.commit()
+
     # #Handling wcplayer items
-    # def process_wcplayer(self, wcplayer):
-    #
-    #     add_players = ("INSERT INTO players1"
-    #                    "(name, position, country)"
-    #                    "VALUES (%(name)s, %(position)s, %(country)s)")
-    #
-    #
-    #     player_dict = dict(wcplayer)
-    #
-    #     player_data = {
-    #         "name": player_dict["player"],
-    #         "position": player_dict["player_position"],
-    #         "country": player_dict["country"]
-    #                                             }
-    #
-    #     try:
-    #         self.cursor.execute(add_players, player_data)
-    #
-    #     except _mysql_connector.MySQLError as error:
-    #         print(f"Error importing data: {error}")
-    #         pass
-    #
-    #     self.connection.commit()
-        return
+    def process_wcplayer(self, wcplayer):
+
+        add_players = ("INSERT INTO players1"
+                       "(name, position, country)"
+                       "VALUES (%(name)s, %(position)s, %(country)s)")
+
+
+        player_dict = dict(wcplayer)
+
+        player_data = {
+            "name": player_dict["player"],
+            "position": player_dict["player_position"],
+            "country": player_dict["country"]
+                                                }
+
+        try:
+            self.connection.cursor().execute(add_players, player_data)
+
+        except _mysql_connector.MySQLError as error:
+            print(f"Error importing data: {error}")
+            pass
+
+        self.connection.commit()
+
 
     def close_spider(self, spider):
-        self.cursor.close()
+        self.connection.cursor().close()
         self.connection.close()
