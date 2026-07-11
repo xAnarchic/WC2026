@@ -474,15 +474,15 @@ class ImportToMySQLPipeline:
 
         movement_data = {
             "name": movement_dict["player"],
-            "assists": movement_dict["assists"],
-            "on_target_attempts": movement_dict["on_target_attempts"],
-            "total_goal_attempts": movement_dict["total_goal_attempts"],
-            "attempts_in_box": movement_dict["attempts_in_box"],
-            "attempts_outside_box": movement_dict["attempts_outside_box"],
-            "total_header_attempts": movement_dict["total_header_attempts"],
-            "expected_goals": movement_dict["expected_goals"],
-            "expected_goal_efficiency": movement_dict["expected_goal_efficiency"],
-            "corners": movement_dict["corners"]
+            "total_offers_to_receive_ball": movement_dict["assists"],
+            "offers_behind_def_line": movement_dict["on_target_attempts"],
+            "offers_between_def_units": movement_dict["total_goal_attempts"],
+            "offers_ahead_def_line": movement_dict["attempts_in_box"],
+            "offers_inside_shape": movement_dict["attempts_outside_box"],
+            "receptions_in_behind": movement_dict["total_header_attempts"],
+            "receptions_between_mid_and_def_lines": movement_dict["expected_goals"],
+            "receptions_under_pressure": movement_dict["expected_goal_efficiency"],
+            "player_involvements": movement_dict["corners"]
         }
 
         try:
