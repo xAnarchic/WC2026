@@ -95,7 +95,5 @@ class Physical(scrapy.Item):
     sprints = scrapy.Field()
     total_distance = scrapy.Field()
 
-    #test
-
 
 
