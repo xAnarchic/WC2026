@@ -524,3 +524,5 @@ class ImportToMySQLPipeline:
     def close_spider(self, spider):
         self.connection.cursor().close()
         self.connection.close()
+
+        # test1
