@@ -536,5 +536,6 @@ class WCspiderstats(scrapy.Spider):
             pass
         else:
             raise CloseSpider("")
+#test1
 
 
