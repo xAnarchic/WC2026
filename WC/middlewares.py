@@ -8,6 +8,7 @@ from scrapy import signals
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
+#test1
 
 class WcSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
