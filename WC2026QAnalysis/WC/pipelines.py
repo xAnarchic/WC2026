@@ -8,12 +8,7 @@ import mysql.connector as connector
 from mysql.connector import errorcode
 from WC.items import Wcteam, Wcplayer, Goldenbootdata, Attacking, Distribution, Defending, Discipline, Goalkeeping, Movement, Physical
 from scrapy.exceptions import CloseSpider
-#test11
 
-# class WcPipeline:
-#     #Immediate team and player item processing
-#     def process_item(self, item):
-#         pass
 
 
 class ImportToMySQLPipeline:
